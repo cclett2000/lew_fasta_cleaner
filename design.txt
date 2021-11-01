@@ -1,0 +1,75 @@
+Design for the program
+
+> file getter
+    - DIR scanner
+    - allow user choice
+    - store file
+
+> file worker
+    - trim ID
+        - use calc to auto-detect
+
+> file writer
+    - write to a new file (SEPARATE FROM INPUT)
+
+> Debugging
+    - file not found
+    - file type not recognized? (based on fasta format?) >> ignore for now
+-------------------------------------------------------------
+FASTA Format
+    > header
+    SEQ(...)
+
+Extensions
+    > "https://en.wikipedia.org/wiki/FASTA_format"
+    - '.fasta', '.fa' = generic
+    - '.fna' = FASTA nucleic acid
+    - '.ffn' = FASTA nucleotide of gene regions
+    - '.faa' = FASTA amino acid
+    - '.frn' = FASTA non-coding RNA
+-------------------------------------------------------------
+***CONFIG***
+    - generate config.ini on first run
+    - settings to include (for now):
+        > enable debug?
+        > show mem/runtime
+        > PATH
+        > create backup >> should be optional or always true?
+        >
+***PREPROCESS***
+    - create file bk
+        > in case any issues occur, there will be a backup
+        > program should not touch OG file but just in case
+    - percent done fun? <possibly>
+        > current idea: scan file and count '>', then begin work.
+        > every clean would +1 to a done var, which would be divided
+          by the above total
+        > will probably take extra time :(
+
+***DETECTOR***
+    - scan through file and if '>' is found run func
+        > sounds very slow given the need to scan the entire file
+        > could find a way to use multithreading? multiprocessing?
+            * Get program working first
+        > start with file scan through
+
+***CLEANER***
+    - need to remove 1 - 26 (char); this is starting index of 0
+    - if char(27) is num, replace with ''
+        > could create a blacklist with num 0-9
+        > could see if there is a way to 'pythonically' (is this a word?)
+          detect the diff between a string and a num
+        > given that file contents are considered strings, should probably use blacklist
+    - should have a list for cleaned and uncleaned headers
+        > use .nextline?
+        > store line position?
+
+***WRITER***
+    - create a new file and write cleaned seq to it
+        > create either '.txt' or '.fasta'
+
+***LOG***
+    - should definitely create a log
+        > will allow me to see what's running, when, and why
+        > include: filename, datetime, message for each function and a stacktrace (debuggin)
+        ***will be implemented later***
