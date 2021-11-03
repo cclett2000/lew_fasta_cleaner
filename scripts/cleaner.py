@@ -1,4 +1,5 @@
 from shutil import copyfile
+import os
 import psutil
 
 def file_cleaner(file):
@@ -6,15 +7,13 @@ def file_cleaner(file):
     enable_cleaner_debug = False
 
     # PATHs
-    PATH = '../.input/' + file  # retrieves file from PATH
-    BKPATH = '../.input/.backup/' + file # where to create backup file
+    PATH = '.input/' + file  # retrieves file from PATH
+    BKPATH = '.input/.backup/' + file # where to create backup file
 
     # create backup file
     def backup_file(file):
         print('\nCreating Backup...')
-
         copyfile(PATH, BKPATH)  # copy file to BKPATH
-
         print('\t>>> Backup Finished!')
     backup_file(file)
 
