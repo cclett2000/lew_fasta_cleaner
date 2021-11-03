@@ -23,9 +23,9 @@ config.read(configPath)
 
 ################################################################################
 
-# PATH
-inputPath = config.get('PATH', 'sInpPath')
-outPath = config.get('PATH', 'sOutPath')
+# PATH >> no longer needed
+# inputPath = config.get('PATH', 'sInpPath')
+# outPath = config.get('PATH', 'sOutPath')
 
 # DEBUG
 enableDebug = config.getboolean('DEBUG', 'bEnableDebug')
