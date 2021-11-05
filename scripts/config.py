@@ -3,7 +3,7 @@ from os import path
 
 config = configparser.ConfigParser()
 config.optionxform = str # makes parser case-sensitive
-configPath = '..//config.ini'
+configPath = '../config.ini'
 
 ###############################################################################
 # generate config file if not detected
@@ -18,10 +18,9 @@ if path.exists(configPath) is False:
 
         config.write(config_file)
         print('\t>>> Done.')
+################################################################################
 
 config.read(configPath)
-
-################################################################################
 
 # PATH >> no longer needed
 # inputPath = config.get('PATH', 'sInpPath')
@@ -33,4 +32,6 @@ enableDebug = config.getboolean('DEBUG', 'bEnableDebug')
 # INFO
 showRunInfo = config.getboolean('INFO', 'bShowMemRuntime')
 
+# MISC
+enableBackup = config.getboolean('MISC', 'bCreateBackup')
 

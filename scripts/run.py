@@ -1,29 +1,33 @@
 # Charles Lett Jr.
 # October 25, 2021
 # main script for running FASTA file cleaner
+# TODO: fix bug with DIR PATH
+#       fix bug with 'config.ini' not returning what is set;
 import os
 import psutil
+import config
 import cleaner
 import datetime
 
 # scans '.input' DIR then asks for user input
 def get_file():
-
     # clear cmd prompt/terminal
     os.system('cls' if os.name in ('nt', 'dos', 'window') else 'clear')
 
-    print('Scanning ".input" folder...')
+    print('DEBUG:', config.enableDebug, '| BK:', config.enableBackup)
+
+    print('\nScanning ".input" folder...')
 
     # scan '.input' dir for files
     global file_sel
-    files = os.listdir('.input')
+    files = os.listdir(os.path.abspath('../.input'))
     dir_ind = 1
 
-    print('\tFile(s) found:')
+    print('\t>>> File(s) found:')
     # the extra '+ 1' & '- 1' is to ignore and not display the backup folder;
     # display found files
     for f in range(len(files) - 1):
-        print('\t' + str(dir_ind) + ')', files[dir_ind])
+        print('\t   ' + str(dir_ind) + ')', files[dir_ind])
         dir_ind += 1
 
     dir_ind = 1 # reset dir index
@@ -60,21 +64,23 @@ def get_file():
 def write_file(file_name, cleaned_file):
     PATH = '.output/' + ('EDITED_' + file_name)
 
-    print('\nStarting File Writer...')
-    writer = open(PATH, 'w+') # write to file; create if not available
-    writer.write(cleaned_file)
-
     # if file exists let user know it was overwritten
     if os.path.exists(PATH):
+        print('\nStarting File Writer...')
+        writer = open(PATH, 'w+') # write to file; create if not available
+        writer.write(cleaned_file)
         print('\t>>> File Overwritten!')
+
     else:
+        print('\nStarting File Writer...')
+        writer = open(PATH, 'w+') # write to file; create if not available
+        writer.write(cleaned_file)
         print('\t>>> File Created!')
 
     # for 'show_location' setting >>> later implementation of config.ini
     # print ('File Location:', os.path.abspath('EDITED_' + file_name))
 
 ############################################################################################
-
 # program start
 get_file() # 'file_sel'; request user input for detected files
 
@@ -82,7 +88,7 @@ time_start = datetime.datetime.now() # start runtime record
 process = psutil.Process() # get process ID?
 
 # call functions
-cleaned_file = cleaner.file_cleaner(file_sel) # holds cleaned file
+cleaned_file = cleaner.file_cleaner(file_sel, config.enableDebug, config.enableBackup) # holds cleaned file
 write_file(file_sel, cleaned_file) # writes cleaned_file to new file
 
 # program finish

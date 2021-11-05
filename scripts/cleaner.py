@@ -1,21 +1,18 @@
 from shutil import copyfile
-import os
-import psutil
+import config
 
-def file_cleaner(file):
-    # programmer options
-    enable_cleaner_debug = False
+def file_cleaner(file, debug, backup):
+
 
     # PATHs
     PATH = '.input/' + file  # retrieves file from PATH
     BKPATH = '.input/.backup/' + file # where to create backup file
 
     # create backup file
-    def backup_file(file):
+    if backup is True:
         print('\nCreating Backup...')
         copyfile(PATH, BKPATH)  # copy file to BKPATH
         print('\t>>> Backup Finished!')
-    backup_file(file)
 
     # start cleaner
     print('\nStarting File Cleaner...')
@@ -36,7 +33,7 @@ def file_cleaner(file):
                         break
 
                 # store header in 'header' list; clean if needed
-                if enable_cleaner_debug is True:
+                if debug is True:
                     # shows debug info to help solve any future issues
                     print('\nHEADER_LINE_POS:', i + 1, '\n')  # head pos
                     print('START:', start, '| END:', end)  # start/end pos within head
@@ -46,12 +43,12 @@ def file_cleaner(file):
                     print('AFT:', lines[i]) # after replace
                     print('-'*30)
 
-                elif enable_cleaner_debug is False:
+                elif debug is False:
                     if end < 30:
                         lines[i] = lines[i].replace(lines[i][start:end], '')
 
         # print("".join(lines)) # uncomment to see if file came together properly
 
-    # preprocess
+
     print("\t>>> File Cleaning Finish!")
     return "".join(lines)
