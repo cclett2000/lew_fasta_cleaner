@@ -33,9 +33,9 @@ Extensions
     - settings to include (for now):
         > enable debug?
         > show mem/runtime
-        > PATH
+        > PATH >> no longer needed
         > create backup >> should be optional or always true?
-        >
+
 ***PREPROCESS***
     - create file bk
         > in case any issues occur, there will be a backup
@@ -63,6 +63,9 @@ Extensions
     - should have a list for cleaned and uncleaned headers
         > use .nextline?
         > store line position?
+		
+***SORTER*** (this is up in the air)
+	- Take each DNA seq and sort it based on header (A-Z)
 
 ***WRITER***
     - create a new file and write cleaned seq to it
