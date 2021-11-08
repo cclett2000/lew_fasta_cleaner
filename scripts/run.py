@@ -14,20 +14,20 @@ def get_file():
     # clear cmd prompt/terminal
     os.system('cls' if os.name in ('nt', 'dos', 'window') else 'clear')
 
-    print('DEBUG:', config.enableDebug, '| BK:', config.enableBackup)
+    print('DEBUG:', config.enableDebug, '| BK:', config.enableBackup, '| RUNINFO:', config.showRunInfo)
 
-    print('\nScanning ".input" folder...')
+    print('\n>>> Scanning for files...')
 
     # scan '.input' dir for files
     global file_sel
-    files = os.listdir(os.path.abspath('../.input'))
+    files = os.listdir(os.path.abspath('./.input'))
     dir_ind = 1
 
-    print('\t>>> File(s) found:')
+    print('File(s) found:')
     # the extra '+ 1' & '- 1' is to ignore and not display the backup folder;
     # display found files
     for f in range(len(files) - 1):
-        print('\t   ' + str(dir_ind) + ')', files[dir_ind])
+        print('- ' + str(dir_ind) + ')', files[dir_ind])
         dir_ind += 1
 
     dir_ind = 1 # reset dir index
@@ -41,46 +41,48 @@ def get_file():
     while file_num <= 0 or file_num >= len(files):
         # if user input isn't available, inform of error and request again
         os.system('cls' if os.name in ('nt', 'dos', 'window') else 'clear')
-        print('Error: the number entered is not available, please try again'
+        print('>>> Error: the number entered is not available, please try again'
               '\nSelect from:')
 
         # re-display files so user doesn't need to scroll up
         for f in range(len(files) - 1):
-            print('\t' + str(dir_ind) + ')', files[dir_ind])
+            print('- ' + str(dir_ind) + ')', files[dir_ind])
             dir_ind += 1
 
         dir_ind = 1 # reset dir index
 
         # request user input (again...ugh get it right XD)
-        file_num = input('Enter the number corresponding to the file '
-                         'you would like cleaned: ')
+        file_num = input('\nEnter the number corresponding to the file you would like cleaned: ')
         file_num = int(file_num)  # input - str >> int
 
 
     file_sel = files[file_num]
-    print('\t>>> Selected file: ' + file_sel)
+    print('- Selected file: ' + file_sel)
 
 # writes the cleaned file to a new file in the '.output' folder
 def write_file(file_name, cleaned_file):
     PATH = '.output/' + ('EDITED_' + file_name)
 
+    print('\n>>> Saving to file...')
+
     # if file exists let user know it was overwritten
     if os.path.exists(PATH):
-        print('\nStarting File Writer...')
+        print('- File already exists, overwriting...')
         writer = open(PATH, 'w+') # write to file; create if not available
         writer.write(cleaned_file)
-        print('\t>>> File Overwritten!')
+        print('- Done')
 
     else:
-        print('\nStarting File Writer...')
+        print('- Creating new file...')
         writer = open(PATH, 'w+') # write to file; create if not available
         writer.write(cleaned_file)
-        print('\t>>> File Created!')
+        print('- Done')
 
     # for 'show_location' setting >>> later implementation of config.ini
     # print ('File Location:', os.path.abspath('EDITED_' + file_name))
 
 ############################################################################################
+
 # program start
 get_file() # 'file_sel'; request user input for detected files
 
@@ -99,5 +101,6 @@ print('\nDone!') # finish message
 
 # debugging
 # runtime may not be accurate :-/ >>> make sure to start runtime calc after user input
-print('- Runtime:', int(runtime.total_seconds() * 1000), 'ms')
-print('- Memory Usage:', process.memory_info().rss/10**6, 'MB\n') # show memory usage? just playing around here
+if config.showRunInfo:
+    print('- Runtime:', int(runtime.total_seconds() * 1000), 'ms')
+    print('- Memory Usage:', process.memory_info().rss/10**6, 'MB\n') # show memory usage? just playing around here

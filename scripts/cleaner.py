@@ -1,21 +1,20 @@
 from shutil import copyfile
-import config
 
 def file_cleaner(file, debug, backup):
-
-
     # PATHs
     PATH = '.input/' + file  # retrieves file from PATH
     BKPATH = '.input/.backup/' + file # where to create backup file
 
     # create backup file
     if backup is True:
-        print('\nCreating Backup...')
+        print('\n>>> Creating Backup...')
         copyfile(PATH, BKPATH)  # copy file to BKPATH
-        print('\t>>> Backup Finished!')
+        print('- Done.')
+    else:
+        print('\n>>> File Backup Disabled.')
 
     # start cleaner
-    print('\nStarting File Cleaner...')
+    print('\n>>> Cleaning File...')
 
     with open(PATH) as file:
         lines = file.readlines()
@@ -50,5 +49,5 @@ def file_cleaner(file, debug, backup):
         # print("".join(lines)) # uncomment to see if file came together properly
 
 
-    print("\t>>> File Cleaning Finish!")
+    print("- Done.")
     return "".join(lines)

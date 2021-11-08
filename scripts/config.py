@@ -3,11 +3,11 @@ from os import path
 
 config = configparser.ConfigParser()
 config.optionxform = str # makes parser case-sensitive
-configPath = '../config.ini'
+configPath = './config.ini'
 
 ###############################################################################
 # generate config file if not detected
-if path.exists(configPath) is False:
+if path.isfile(configPath) is False:
     print('Configuration file not detected, creating new one...')
     with open(configPath, 'w') as config_file:
         # config['PATH'] = {'sInpPath': '".input" folder path goes here',
