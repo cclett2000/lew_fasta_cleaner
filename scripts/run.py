@@ -70,13 +70,13 @@ def write_file(file_name, cleaned_file):
         print('- File already exists, overwriting...')
         writer = open(PATH, 'w+') # write to file; create if not available
         writer.write(cleaned_file)
-        print('- Done')
+        print('- Done.')
 
     else:
         print('- Creating new file...')
         writer = open(PATH, 'w+') # write to file; create if not available
         writer.write(cleaned_file)
-        print('- Done')
+        print('- Done.')
 
     # for 'show_location' setting >>> later implementation of config.ini
     # print ('File Location:', os.path.abspath('EDITED_' + file_name))
@@ -97,7 +97,7 @@ write_file(file_sel, cleaned_file) # writes cleaned_file to new file
 time_end = datetime.datetime.now() # end runtime record
 runtime = time_end - time_start
 
-print('\nDone!') # finish message
+print('\nProgram Finished.') # finish message
 
 # debugging
 # runtime may not be accurate :-/ >>> make sure to start runtime calc after user input
