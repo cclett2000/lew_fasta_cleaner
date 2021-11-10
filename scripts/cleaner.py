@@ -22,6 +22,7 @@ def file_cleaner(file, debug, backup):
         # store headers in list, with its pos
         start = 0
         end = 0
+        seq_count = 0
         for i in range(len(lines)):
             if lines[i][0] == '>':
                 start = 1  # set start to line ind. with '>'
@@ -33,7 +34,9 @@ def file_cleaner(file, debug, backup):
 
                 # store header in 'header' list; clean if needed
                 if debug is True:
+                    seq_count += 1 # increment to find number of headers
                     # shows debug info to help solve any future issues
+                    print('\nHEADER/SEQ #:', seq_count)
                     print('\nHEADER_LINE_POS:', i + 1, '\n')  # head pos
                     print('START:', start, '| END:', end)  # start/end pos within head
                     print('\nBEF:', lines[i])  # before replace
