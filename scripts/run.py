@@ -71,12 +71,14 @@ def write_file(file_name, cleaned_file):
         writer = open(PATH, 'w+') # write to file; create if not available
         writer.write(cleaned_file)
         print('- Done.')
+        writer.close()
 
     else:
         print('- Creating new file...')
         writer = open(PATH, 'w+') # write to file; create if not available
         writer.write(cleaned_file)
         print('- Done.')
+        writer.close()
 
     # for 'show_location' setting >>> later implementation of config.ini
     # print ('File Location:', os.path.abspath('EDITED_' + file_name))
