@@ -1,5 +1,9 @@
 from shutil import copyfile
 
+# TODO: work on a partitioning method that divides larger files
+#       so systems with less RAM can work through each partition
+#       opposed to storing the entire file in RAM;
+
 def file_cleaner(file, debug, backup):
     # PATHs
     PATH = '.input/' + file  # retrieves file from PATH

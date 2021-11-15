@@ -3,13 +3,21 @@
 # main script for running FASTA file cleaner
 # TODO: fix bug with DIR PATH
 #       fix bug with 'config.ini' not returning what is set;
+
+############################################################################################
+
+# base imports
 import os
 import psutil
 import config
-import cleaner
 import datetime
 
-# scans '.input' DIR then asks for user input
+# import created modules
+from module import faa_cleaner
+
+############################################################################################
+
+# scans '.input' DIR, allow user to select file
 def get_file():
     # clear cmd prompt/terminal
     os.system('cls' if os.name in ('nt', 'dos', 'window') else 'clear')
@@ -59,8 +67,8 @@ def get_file():
     file_sel = files[file_num]
     print('- Selected file: ' + file_sel)
 
-# writes the cleaned file to a new file in the '.output' folder
-def write_file(file_name, cleaned_file):
+# writes to a new file in the '.output' folder
+def write_file(file_name, file):
     PATH = '.output/' + ('EDITED_' + file_name)
 
     print('\n>>> Saving to file...')
@@ -69,14 +77,14 @@ def write_file(file_name, cleaned_file):
     if os.path.exists(PATH):
         print('- File already exists, overwriting...')
         writer = open(PATH, 'w+') # write to file; create if not available
-        writer.write(cleaned_file)
+        writer.write(file)
         print('- Done.')
         writer.close()
 
     else:
         print('- Creating new file...')
         writer = open(PATH, 'w+') # write to file; create if not available
-        writer.write(cleaned_file)
+        writer.write(file)
         print('- Done.')
         writer.close()
 
@@ -87,21 +95,23 @@ def write_file(file_name, cleaned_file):
 
 # program start
 get_file() # 'file_sel'; request user input for detected files
-
 time_start = datetime.datetime.now() # start runtime record
 process = psutil.Process() # get process ID?
 
 # call functions
-cleaned_file = cleaner.file_cleaner(file_sel, config.enableDebug, config.enableBackup) # holds cleaned file
+cleaned_file = faa_cleaner.file_cleaner(file_sel, config.enableDebug, config.enableBackup) # holds cleaned file
 write_file(file_sel, cleaned_file) # writes cleaned_file to new file
 
 # program finish
 time_end = datetime.datetime.now() # end runtime record
 runtime = time_end - time_start
 
-print('\nProgram Finished.') # finish message
+############################################################################################
 
-# debugging
+#TODO: fix memory usage - only records memory used before program finished
+
+# program done
+print('\nProgram Finished.')
 # runtime may not be accurate :-/ >>> make sure to start runtime calc after user input
 if config.showRunInfo:
     print('- Runtime:', int(runtime.total_seconds() * 1000), 'ms')
