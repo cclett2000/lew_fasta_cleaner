@@ -14,6 +14,8 @@ import datetime
 # import created modules
 from module import fasta_module
 
+# TODO: implement memory check
+
 ############################################################################################
 # MODULES
 #   - WHEN IMPLEMENTING NEW MODULES, UPDATE IF STATEMENT IN 'get_module()'

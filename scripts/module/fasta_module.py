@@ -9,11 +9,17 @@ def faa_cleaner(file, debug, backup):
     PATH = '.input/' + file  # retrieves file from PATH
     BKPATH = '.input/.backup/' + file # where to create backup file
 
-    # create backup file
+    # create backup file; UPDATED - now uses buffering
     if backup is True:
         print('\n>>> Creating Backup...')
-        copyfile(PATH, BKPATH)  # copy file to BKPATH
+
+        backup_file = open(BKPATH, 'a')
+        with open(PATH, buffering=2**30) as file:
+            for line in file:
+                backup_file.write(line)
+
         print('- Done.')
+
     else:
         print('\n>>> File Backup Disabled.')
 
