@@ -1,5 +1,3 @@
-Design for the program
-
 > file getter
     - DIR scanner
     - allow user choice
@@ -15,7 +13,8 @@ Design for the program
 > Debugging
     - file not found
     - file type not recognized? (based on fasta format?) >> ignore for now
--------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
+                                             >> FASTA INFO <<
 FASTA Format
     > header
     SEQ(...)
@@ -27,7 +26,8 @@ Extensions
     - '.ffn' = FASTA nucleotide of gene regions
     - '.faa' = FASTA amino acid
     - '.frn' = FASTA non-coding RNA
--------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
+                                                 >> MAIN <<
 ***CONFIG***
     - generate config.ini on first run
     - settings to include (for now):
@@ -35,6 +35,14 @@ Extensions
         > show mem/runtime
         > PATH >> no longer needed
         > create backup >> should be optional or always true?
+
+***MODULE SWITCH***
+    1) use config.ini to set which module to use on chosen file
+        > use int to represent module to call?
+            - user will need to know what each number represents
+            - possible convolution?
+    2) ask for user selection during runtime
+        > in the same way file selection is chosen
 
 ***PREPROCESS***
     - create file bk
@@ -53,20 +61,6 @@ Extensions
             * Get program working first
         > start with file scan through
 
-***CLEANER***
-    - need to remove 1 - 26 (char); this is starting index of 0
-    - if char(27) is num, replace with ''
-        > could create a blacklist with num 0-9
-        > could see if there is a way to 'pythonically' (is this a word?)
-          detect the diff between a string and a num
-        > given that file contents are considered strings, should probably use blacklist
-    - should have a list for cleaned and uncleaned headers
-        > use .nextline?
-        > store line position?
-		
-***SORTER*** (this is up in the air)
-	- Take each DNA seq and sort it based on header (A-Z)
-
 ***WRITER***
     - create a new file and write cleaned seq to it
         > create either '.txt' or '.fasta'
@@ -76,3 +70,24 @@ Extensions
         > will allow me to see what's running, when, and why
         > include: filename, datetime, message for each function and a stacktrace (debuggin)
         ***will be implemented later***
+--------------------------------------------------------------------------------------------------------------------------
+                                                >> MODULES <<
+
+***FAA_CLEANER*** (amino acid fasta cleaner)
+    >> WORK ON PARTITIONING METHOD
+    - if char(27) is num, replace with ''
+        > could create a blacklist with num 0-9
+        > could see if there is a way to 'pythonically' (is this a word?)
+          detect the diff between a string and a num
+        > given that file contents are considered strings, should probably use blacklist
+    - should have a list for cleaned and uncleaned headers
+        > use .nextline?
+        > store line position?
+
+***FNA_FORMATTER***
+    >> WORK ON PARTITIONING METHOD
+    - remove all headers
+    - make each line 200bp long?
+        > number of nucleotides per line?
+    - how can I have 200bp if all headers are stripped?
+        > turn headers into '#'?

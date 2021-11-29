@@ -4,7 +4,7 @@ from shutil import copyfile
 #       so systems with less RAM can work through each partition
 #       opposed to storing the entire file in RAM;
 
-def file_cleaner(file, debug, backup):
+def faa_cleaner(file, debug, backup):
     # PATHs
     PATH = '.input/' + file  # retrieves file from PATH
     BKPATH = '.input/.backup/' + file # where to create backup file
@@ -58,3 +58,16 @@ def file_cleaner(file, debug, backup):
 
     print("- Done.")
     return "".join(lines)
+
+def fna_reformat(file, debug, backup):
+    # placeholder function for the fasta reformatter
+    #   - remove all headers
+    #   - format sequences so they are around 200bps
+    #   - create a partitioning algorithm that allows the use
+    #     of large files when sufficient RAM is not available
+    #       > could use char count to estimate amount of RAM to use;
+
+    # BACKUP
+
+    # REPLACER/DEBUG
+    pass
