@@ -32,6 +32,35 @@ module_desc = {1: '\n\t > Trims header(s) in a FASTA file containing amino acids
 ############################################################################################
 # FUNCTIONS
 
+# checks memory and sets buffer size accordingly; GLOBALS = 'buffer_size'
+def mem_check():
+    global buffer_size
+    buffer_size = 0
+
+    free_mem_per = config.free_memory_percent # % of free memory that program can used
+    buffer_max = 2147483647 # max value for CInt ~2.15 GB
+
+    free_mem = psutil.virtual_memory().available # available memory
+    available_mem = round(free_mem * free_mem_per / 100) # memory available to program
+
+    # check to not surpass free memory percent
+    if available_mem >= buffer_max:
+        buffer_size = buffer_max
+    else:
+        buffer_size = available_mem
+
+    # debugging
+    if config.enableDebug is True:
+        os.system('cls')
+        print('[Buffer Information]')
+        print('Available %:            ', free_mem_per,
+              '\n\nFree Memory:\t        ', free_mem,
+              '\nAvailable Memory:\t', available_mem,
+              '\n\nBuffer Size:            ', buffer_size,
+              '\nBuffer Max:             ', buffer_max,
+              '\n')
+        os.system('pause')
+
 # scans '.input' DIR, allow user to select file
 def get_file():
     # clear cmd prompt/terminal
@@ -83,7 +112,7 @@ def get_file():
     print('- Selected file: ' + file_sel)
 
 # select which module to use; GLOBALS = 'processed_file', 'mod_sel', 'module_runtime'
-def get_module():
+def get_module(buffer_size):
     global mod_sel, processed_file, module_runtime
 
     os.system('cls' if os.name in ('nt', 'dos', 'window') else 'clear')
@@ -131,7 +160,7 @@ def get_module():
 
     # execute selected module
     if mod_sel == 'faa_cleaner':
-        processed_file = fasta_module.faa_cleaner(file_sel, config.enableDebug, config.enableBackup)
+        processed_file = fasta_module.faa_cleaner(file_sel, config.enableDebug, config.enableBackup, buffer_size)
     if mod_sel == 'fna_formatter':
         print('\n>>> This module is not yet implemented.'
               '\nExiting...')
@@ -168,9 +197,9 @@ def write_file(file_name, file):
 ############################################################################################
 # FUNCTION CALLERS
 
+mem_check() # 'buffer_size'; set buffer_size
 get_file() # 'file_sel'; request user input for detected files
-get_module() # 'processed_file'; request user module selection
-write_file(file_sel, processed_file) # writes cleaned_file to new file
+get_module(buffer_size) # 'processed_file'; request user module selection
 
 ############################################################################################
 # PROGRAM END

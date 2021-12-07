@@ -1,12 +1,10 @@
-from shutil import copyfile
+import os
+from multiprocessing import Process
 
-# TODO: work on a partitioning method that divides larger files
-#       so systems with less RAM can work through each partition
-#       opposed to storing the entire file in RAM;
-
-def faa_cleaner(file, debug, backup):
+def faa_cleaner(file, debug, backup, buffer_size):
     # PATHs
     PATH = '.input/' + file  # retrieves file from PATH
+    WRPATH = '.output/EDITED_' + file
     BKPATH = '.input/.backup/' + file # where to create backup file
 
     # create backup file; UPDATED - now uses buffering
@@ -14,7 +12,7 @@ def faa_cleaner(file, debug, backup):
         print('\n>>> Creating Backup...')
 
         backup_file = open(BKPATH, 'a')
-        with open(PATH, buffering=2**30) as file:
+        with open(PATH, buffering=buffer_size) as file:
             for line in file:
                 backup_file.write(line)
 
@@ -24,21 +22,37 @@ def faa_cleaner(file, debug, backup):
         print('\n>>> File Backup Disabled.')
 
     # start cleaner
-    print('\n>>> Cleaning File...')
+    print("\n>>> 'faa_cleaner' starting...")
 
-    with open(PATH) as file:
-        lines = file.readlines()
+    if os.path.exists(WRPATH):
+        print('- Output File Already Exists. Removing...', end='\a')
+        os.remove(WRPATH)
+        print('Done!')
+
+    with open(PATH, buffering=buffer_size) as file:
+        write_file = open(WRPATH, 'a')
+        line_store = []
+        status_message = ['- Status: Cleaning',
+                          '- Status:  Writing',
+                          '- Status: Complete']
+        status = status_message[0]
+
+        # shows/updates to display whats occurring
+        def show_status(status):
+            print(status, end='\r')
+        show_status(status)
 
         # store headers in list, with its pos
         start = 0
         end = 0
         seq_count = 0
-        for i in range(len(lines)):
-            if lines[i][0] == '>':
+
+        for line in file:
+            if line[0] == '>':
                 start = 1  # set start to line ind. with '>'
 
-                for j in range(len(lines[i])):
-                    if lines[i][j] == '_':
+                for j in range(len(line)):
+                    if line[j] == '_':
                         end = j + 1 # set end to first '_'
                         break
 
@@ -47,23 +61,41 @@ def faa_cleaner(file, debug, backup):
                     seq_count += 1 # increment to find number of headers
                     # shows debug info to help solve any future issues
                     print('\nHEADER/SEQ #:', seq_count)
-                    print('\nHEADER_LINE_POS:', i + 1, '\n')  # head pos
                     print('START:', start, '| END:', end)  # start/end pos within head
-                    print('\nBEF:', lines[i])  # before replace
+                    print('\nBEF:', line)  # before replace
                     if end < 30:
-                        lines[i] = lines[i].replace(lines[i][start:end], '')
-                    print('AFT:', lines[i]) # after replace
+                        line = line.replace(line[start:end], '')
+                    print('AFT:', line) # after replace
                     print('-'*30)
 
                 elif debug is False:
+                    # buffering isn't being utilize but the 1MIL check works!
+                    # ^ will not write small files :(
                     if end < 30:
-                        lines[i] = lines[i].replace(lines[i][start:end], '')
+                        # big data check (uses ~2.7GB of RAM)
+                        while len(line_store) > 10000000:
+                            status = status_message[1] # update status -writing
+                            show_status(status)
 
-        # print("".join(lines)) # uncomment to see if file came together properly
+                            write_file.write(''.join(line_store))
 
+                            status = status_message[0] # update status -we're back to cleanin!
+                            show_status(status)
 
-    print("- Done.")
-    return "".join(lines)
+                            line_store.clear() # purge list
+                        line = line.replace(line[start:end], '')
+
+            line_store.append(line)
+
+    # write to file if file was able to fit within list constraint
+    if len(line_store) < 10000000:
+        status = status_message[1]  # update status -writing
+        show_status(status)
+        write_file.write(''.join(line_store))
+
+    status = status_message[2]  # update status -complete
+    show_status(status)
+    print("\n- Done.")
 
 def fna_reformat(file, debug, backup):
     # placeholder function for the fasta reformatter

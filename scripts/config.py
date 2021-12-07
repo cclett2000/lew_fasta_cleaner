@@ -10,21 +10,16 @@ configPath = './config.ini'
 if path.isfile(configPath) is False:
     print('Configuration file not detected, creating new one...')
     with open(configPath, 'w') as config_file:
-        # config['PATH'] = {'sInpPath': '".input" folder path goes here',
-        #                   'sOutPath': '".output" folder path goes here'}
         config['DEBUG'] = {'bEnableDebug': 'False'}
         config['INFO'] = {'bShowMemRuntime': 'True'}
         config['MISC'] = {'bCreateBackup': 'True'}
+        config['RESOURCE'] = {'iFreeMemoryPercent': '70'}
 
         config.write(config_file)
         print('\t>>> Done.')
 ################################################################################
 
 config.read(configPath)
-
-# PATH >> no longer needed
-# inputPath = config.get('PATH', 'sInpPath')
-# outPath = config.get('PATH', 'sOutPath')
 
 # DEBUG
 enableDebug = config.getboolean('DEBUG', 'bEnableDebug')
@@ -35,3 +30,5 @@ showRunInfo = config.getboolean('INFO', 'bShowMemRuntime')
 # MISC
 enableBackup = config.getboolean('MISC', 'bCreateBackup')
 
+# RES
+free_memory_percent = config.getint('RESOURCE', 'iFreeMemoryPercent')
