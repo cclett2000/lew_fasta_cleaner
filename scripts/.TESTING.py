@@ -74,47 +74,104 @@ def t4():
     #       > could use char count to estimate amount of RAM to use;
 
     # TODO: make pathing dynamic
-    PATH = '../.input/A3_S1_LALL_R1_001(2).fasta'
+    PATH = '../scripts/.test_data.test'
     output_file_name = '../.output/A3_S1_LALL_R1_001(2)_formatted.fasta'
-    sample_file = '../.output/A3_S1_LALL_R1_001(2)_sample.fasta'
-    running = False
 
     with open(PATH) as file:
         process = psutil.Process()
 
         enable_debug = True
-        create_sample = True  # kill alg after first purge, creates sample for presentation
+        create_sample = False  # kill alg after first purge, creates sample for presentation
 
-        def debug():
-            stat_msg = {0 : ''}
+        # set partition size
+        def set_list_size():
+            list_size = 10**6  # set size of lists (default = 10**6 or 1 million lines)
 
+            # list size check, sets list_size to file length if lower than set value
+            print('>>> Getting File Line Count...')
+            global size_check
+            size_check = sum(1 for line in open(PATH))
+            og_size = list_size
+
+            if size_check <= list_size:
+                list_size = size_check
+                print('\t- Line Threshold Changed\n', '\t\tOld:', og_size, 'New:', list_size)
+            print('Done.')
+
+            return list_size
+
+        # algorithm
         def format_alg():
-            print('Starting Algorithm...')
+            pass_count = 0          # keep track of number of passes through file
+            list_size = set_list_size()
+            remaining_lines = size_check
 
-            data_size = 50
+            line_list = []
+            char_list = []
+            index = 0             # index to place newline
+            inc_index = 200       # incrementer
 
-            line_data = []
-            char_data = []
-            index = 4   #200
-
+            print('\n>>> Starting Algorithm...')
             for line in file:
+                # remove header
                 if line[0] == '>':
                     line = ''
 
-                if len(line_data) >= data_size:
+                # start work on data chunk (stop filling mem)
+                if len(line_list) >= list_size - 1:
+                    line_list_len = len(line_list)
 
-                    while index < len(char_data):
-                        char_data.insert(index, '\n')
-                        index += index
+                    # keep track of remaining lines
+                    remaining_lines -= line_list_len
 
-                    print(char_data)
-                    exit()
+                    char_list = list(''.join(line_list))    # convert lines to char
+                    line_list.clear()                       # clear line list
 
+                    if enable_debug:
+                        pass_count += 1
+                        print('\t- Pass', pass_count)
+                        print('\t\tchar_list size:', len(char_list))        # show char_list size
+                        print('\t\tline_list size:', line_list_len)         # show line_list size
+
+                    # insert newline in desired position
+                    while index < len(char_list):
+                        char_list.insert(index, '\n')
+                        index += inc_index
+
+                    char_list.append('\n')
+
+                    if enable_debug:
+                        print('\n\t\tNewline Insertion Done.')
+
+                    write_file = open(output_file_name, 'a')
+                    write_file.write(''.join(char_list))
+                    write_file.close()
+
+                    # write to file
+                    if enable_debug:
+                        print('\t\tSaved to File.')
+                        print('\t\tRemaining Lines:', remaining_lines, '\n')
+                        print('\t\t', size_check)
+
+                    # clear memory/reset stuph
+                    char_list.clear()
+                    index = inc_index
+
+                    if create_sample:
+                        exit()
+
+                # remove newline if present
                 line = ''.join(line).replace('\n', '')
-                # char_data = [char ]
+
+                # fill list/memory
+                line_list.append(line)
+
+            print('Done.')
+
+
 
 
         format_alg()
 
-# t4()
+t4()
 
