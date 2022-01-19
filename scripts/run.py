@@ -14,13 +14,15 @@ import datetime
 # import created modules
 from module import fasta_module
 
-# TODO: implement memory check
+# TODO: - implement memory check
+#       - fix memory stat
+#       - implement fna_formatter;
 
 ############################################################################################
 # MODULES
 #   - WHEN IMPLEMENTING NEW MODULES, UPDATE IF STATEMENT IN 'get_module()'
 
-module_name = {1: 'faa_cleaner',
+module_name = {1: 'faa_head_cleaner',
                2: 'fna_formatter'}
 
 module_desc = {1: '\n\t > Trims header(s) in a FASTA file containing amino acids;'
@@ -159,9 +161,9 @@ def get_module(buffer_size):
     time_start = datetime.datetime.now()
 
     # execute selected module
-    if mod_sel == 'faa_cleaner':
-        processed_file = fasta_module.faa_cleaner(file_sel, config.enableDebug, config.enableBackup, buffer_size)
-    if mod_sel == 'fna_formatter':
+    if mod_sel == module_name[1]:
+        processed_file = fasta_module.faa_head_cleaner(file_sel, config.enableDebug, config.enableBackup, buffer_size)
+    if mod_sel == module_name[2]:
         print('\n>>> This module is not yet implemented.'
               '\nExiting...')
         exit()

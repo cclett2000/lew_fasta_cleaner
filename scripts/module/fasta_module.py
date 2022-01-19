@@ -1,7 +1,7 @@
 import os
 from multiprocessing import Process
 
-def faa_cleaner(file, debug, backup, buffer_size):
+def faa_head_cleaner(file, debug, backup, buffer_size):
     # PATHs
     PATH = '.input/' + file  # retrieves file from PATH
     WRPATH = '.output/EDITED_' + file
@@ -32,9 +32,9 @@ def faa_cleaner(file, debug, backup, buffer_size):
     with open(PATH, buffering=buffer_size) as file:
         write_file = open(WRPATH, 'a')
         line_store = []
-        status_message = ['- Status: Cleaning',
-                          '- Status:  Writing',
-                          '- Status: Complete']
+        status_message = ['- Status: Cleaning...',
+                          '- Status: Writing... ',
+                          '- Status: Done.      ']
         status = status_message[0]
 
         # shows/updates to display whats occurring
@@ -95,7 +95,7 @@ def faa_cleaner(file, debug, backup, buffer_size):
 
     status = status_message[2]  # update status -complete
     show_status(status)
-    print("\n- Done.")
+    print("\n- Complete.")
 
 def fna_reformat(file, debug, backup):
     # placeholder function for the fasta reformatter
